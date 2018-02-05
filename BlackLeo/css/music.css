@@ -1,0 +1,36 @@
+.music_div {
+    width: 100%;
+    height: 100%; 
+    font-size: 30px;
+}
+
+.music_div p {
+    text-align: left;
+    color: blue;
+}
+
+.music_div input {
+    text-align: left;
+    margin-left: 2px: 
+    white-space: nowrap; 
+}
+
+.music_div select {
+
+}
+
+.music_div ul {
+    border: 1px solid black;
+    padding-left: 10px;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+.music_div li {
+    color: blue;
+}
+
+.music_div audio {
+    
+}
