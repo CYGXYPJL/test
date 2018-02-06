@@ -51,7 +51,12 @@ var server = http.createServer(function (req, res) {
 			}
 
 			var type = types[extname] || "text/plain";
-			res.writeHead(200, {"Content-Type": type});
+			var options = {
+				"Content-Type": type,
+				"Accept-Ranges": "bytes",
+				"Content-Length": file.length
+			};
+			res.writeHead(200, options);
 			res.write(file, "binary");
 			res.end();
 		});

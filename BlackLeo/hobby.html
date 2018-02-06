@@ -26,12 +26,6 @@
         //设定rem值
         document.getElementsByTagName("html")[0].style.fontSize = document.documentElement.clientWidth/20 + 'px';
 
-        function autoPlay(src){
-            var myAuto = document.getElementById('myaudio');
-            myAuto.src = src;
-            myAuto.play();
-        }
-
         //音乐资源
         var myMusics = GetMusicList();
         //数组下标
@@ -56,32 +50,37 @@
             
             //按钮"下一首"单击事件
             $("#nextMusic").click(function(){
-                playMusic(1,1);
+                playMusic(1, 1);
             });
+
             //按钮"上一首"单击事件
             $("#lastMusic").click(function(){
                 playMusic(2);
             });
+
             ////按钮"播放/暂停"单击事件
             $("#playMusic").click(function(){
-                if($(this).val()=="播放"){
+                if ($(this).val() == "播放")
+                {
                     $(this).val("暂停");
-                    document.getElementById("media").play();
-                }else if($(this).val()=="暂停"){
+                    document.getElementById("myMusic").play();
+                } 
+                else if ($(this).val() == "暂停")
+                {
                     $(this).val("播放");
-                    document.getElementById("media").pause();
+                    document.getElementById("myMusic").pause();
                 }
             });
             
             //快进
             $("#fast").click(function(){
-                var media = document.getElementById("media");
-                media.currentTime += 5;
+                var myMusic = document.getElementById("myMusic");
+                myMusic.currentTime += 5;
             });
             //快退
             $("#rewind").click(function(){
-                var media = document.getElementById("media");
-                media.currentTime -= 5;
+                var myMusic = document.getElementById("myMusic");
+                myMusic.currentTime -= 5;
             });
             //播放状态
             $("#playState").change(function(){
@@ -135,11 +134,10 @@
                 }
             }
             
-            
             //修改audio资源路径
-            $("#media").attr("src", "music/" + myMusics[index].src);
+            $("#myMusic").attr("src", "music/" + myMusics[index].src);
             //音乐播放
-            $("#media").play;
+            $("#myMusic").play;
             //显示音乐名称
             $("#musicTitle").text(myMusics[index].title);
             $("title").text(myMusics[index].title);
@@ -153,33 +151,37 @@
             
             $("#sliding").offset({left:60});
         }
+
         //时间获取
         function timeupdate(){
             //获取audio元素
-            var media = document.getElementById("media");
+            var media = document.getElementById("myMusic");
             //音乐当前位置
             var curr = Math.floor(media.currentTime);
             //音乐长度
             var dur = Math.floor(media.duration);
-            $("#totalTime").text("时长："+formatTime(dur));
-            $("#currTime").text("当前："+formatTime(curr));
+            $("#totalTime").text("时长：" + formatTime(dur));
+            $("#currTime").text("当前：" + formatTime(curr));
         }
         //音乐计时格式
-        function formatTime(time){
-            
-            var h=0,i=0,s=parseInt(time);
-            if(s>60){
-                i=parseInt(s/60);
-                s=parseInt(s%60);
-                if(i > 60) {
-                    h=parseInt(i/60);
-                    i = parseInt(i%60);
-                }
+        function formatTime(time) {
+            var h = 0, i = 0, s = parseInt(time);
+            if (s > 3600)
+            {
+                h = parseInt(s / 3600);
+                s = parseInt(s % 3600);
             }
-            var zero=function(v){
-                return (v>>0)<10?"0"+v:v;
+            if(s > 60)
+            {
+                i = parseInt(s / 60);
+                s = parseInt(s % 60);
+            }
+
+            var zero = function(v) {
+                return v < 10 ? "0" + v : v;
             };
-            return (zero(h)+":"+zero(i)+":"+zero(s));
+
+            return zero(h) + ":" + zero(i) + ":" + zero(s);
         };
     </script>
 </head>
@@ -204,10 +206,9 @@
     <div class="wrapBox" id="wrapBox">
         <div class="box01_content">
             <div class="music_div">
-                <audio id="media" src="" autoplay="autoplay" onended="playMusic(1,0)" ontimeupdate="timeupdate()" ></audio>
                 <p id="musicTitle"></p>
-                <p id="currTime" >当前：00:00:00</p>
-                <p id="totalTime" >时长：00:00:00</p>
+                <p id="currTime">当前：00:00:00</p>
+                <p id="totalTime">时长：00:00:00</p>
                             
                 <input id="lastMusic" type="button" value="上一首" />
                 <input id="rewind" type="button" value="<<" />
@@ -219,6 +220,7 @@
                     <option value="1" selected>列表循环</option>
                     <option value="2">随机播放</option>
                 </select>
+                <audio id="myMusic" src="" autoplay="autoplay" onended="playMusic(1,0)" ontimeupdate="timeupdate()" controls></audio>
                 <ul id="box"></ul>
             </div>
         </div>
