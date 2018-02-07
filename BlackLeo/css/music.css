@@ -1,4 +1,4 @@
-.music_div {
+.music_div, .movie_div {
     width: 100%;
     height: 100%; 
     font-size: 30px;
@@ -9,13 +9,18 @@
     color: blue;
 }
 
-.music_div input {
+.movie_div p {
+    text-align: left;
+    color: blue;
+}
+
+.music_div, .movie_div input {
     text-align: left;
     margin-left: 2px: 
     white-space: nowrap; 
 }
 
-.music_div select {
+.music_div, .movie_div select {
 
 }
 
@@ -23,18 +28,28 @@
     border: 1px solid black;
     padding-left: 10px;
     height: 200px;
-    width: 100%;
+    width: 50%;
     overflow: auto;
 }
 
-.music_div li {
+.music_div, .movie_div li {
     color: blue;
 }
 
 .music_div audio {
-    width: 50%;
+    width: 45%;
 }
 
-.music_div video {
+.movie_div video {
+    float: left;
     height: 300px;
+}
+
+.movie_div ul {
+    float: left;
+    border: 1px solid black;
+    padding-left: 10px;
+    height: 300px;
+    width: 50%;
+    overflow: auto;
 }

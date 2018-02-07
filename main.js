@@ -127,5 +127,34 @@ function WriteMusicList() {
 	fs.writeFileSync(filePath, data);
 }
 
+function WriteMovieList() {
+	var dirPath = "./BlackLeo/movie";
+	if (!fs.existsSync(dirPath)) return;
+
+	var state = fs.statSync(dirPath);
+	if (!state.isDirectory()) return;
+
+	var fileDataList = [];
+	var files = fs.readdirSync(dirPath);
+	files.forEach(function (file) {
+		if (file.match(/\.mp4/)) fileDataList.push({src: file, title: (file.split("."))[0]});
+	});
+
+	var data = "function GetMovieList() {\n";
+	data += "    var movieList = [\n";
+	fileDataList.forEach(function (fileData) {
+		data += "        " + JSON.stringify(fileData) + ",\n";
+	});
+	data += "    ];\n\n"
+	data += "    return movieList;\n" + "}";
+	
+	var filePath = "./BlackLeo/js/movieList.js";
+	fs.writeFileSync(filePath, data);
+}
+
+
 WriteMusicList();
 var updateMusicInterval = setInterval(WriteMusicList, 60000);
+
+WriteMovieList();
+var updateMovieInterval = setInterval(WriteMovieList, 60000);

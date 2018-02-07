@@ -22,18 +22,20 @@
     
     <script src="js/jquery-1-7-2.js"></script>
     <script src="js/musicList.js"></script>
+    <script src="js/movieList.js"></script>
     <script type="text/javascript">
         //设定rem值
         document.getElementsByTagName("html")[0].style.fontSize = document.documentElement.clientWidth/20 + 'px';
 
         //音乐资源
         var myMusics = GetMusicList();
+        var myMovies = GetMovieList();
         //数组下标
         var index = -1; 
         //播放状态 单曲循环：0 列表循环：1 随机播放：2
         var playState = 1;
         //创建音乐列表
-        function createBox(){
+        function createBox() {
             var html="";
             for(var i = 0; i < myMusics.length; ++i)
             {
@@ -41,13 +43,28 @@
                 for (var j = liStr.length * 2; j < 16; ++j) liStr += "&nbsp;";
                 html +="<li>" + liStr + "<a href='javascript:clickName(" + i + ");'>" + myMusics[i].title+"</a></li>"
             }
-            return html
+            return html;
         }
+
+        function createMovieBox() {
+            var html="";
+            for(var i = 0; i < myMovies.length; ++i)
+            {
+                var liStr = "" + (i + 1);
+                for (var j = liStr.length * 2; j < 16; ++j) liStr += "&nbsp;";
+                html +="<li>" + liStr + "<a href='javascript:clickMovieName(" + i + ");'>" + myMovies[i].title+"</a></li>"
+            }
+            return html;
+        }
+
         //页面加载      
         $(document).ready(function(){
             $("#"+"box").append(createBox());
             playMusic(1);
             document.getElementById("myMusic").pause();
+
+            $("#"+"movieBox").append(createMovieBox());
+            clickMovieName(0);
             
             //按钮"下一首"单击事件
             $("#nextMusic").click(function(){
@@ -95,6 +112,23 @@
         function clickName(i){
             index=i;
             playMusic(0);
+        }
+
+        function clickMovieName(i) {
+            if (i < 0 || i >= myMovies.length) return;
+
+            var movieInfo = myMovies[i];
+            $("#myVideo").attr("src", "movie/" + movieInfo.src);
+            $("#myVideo").play;
+
+            $("#movieTitle").text(movieInfo.title);
+            $("title").text(movieInfo.title);
+
+            $("#movieBox").children("li").css("background-color","#FFFFFF");
+            $("#movieBox").children("li").css("font-weight","normal");
+            
+            $($("#movieBox").children("li")[i]).css("background-color","#F0F0F0");
+            $($("#movieBox").children("li")[i]).css("font-weight","bold");
         }
         
         //音乐播放
@@ -222,8 +256,13 @@
                 </select>
                 <audio id="myMusic" src="" autoplay="autoplay" onended="playMusic(1,0)" ontimeupdate="timeupdate()" onplay="pauseVideo()" onplaying="pauseVideo()" controls></audio>
                 <ul id="box"></ul>
+            </div>
 
-                <video id="myVideo" src="movie/李贞贤-换男人.mp4" onplay="pauseMusic()" onplaying="pauseMusic()" controls></video>
+            <div class="movie_div">
+                <br/>
+                <p id="movieTitle"></p>
+                <ul id="movieBox"></ul>
+                <video id="myVideo" src="" onplay="pauseMusic()" onplaying="pauseMusic()" controls></video>
             </div>
         </div>
     </div>
