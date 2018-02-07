@@ -21,6 +21,7 @@ var types = {
 	"mp3": "audio/mp3",
 	"wav": "audio/x-wav",
 	"wma": "audio/x-ms-wma",
+	"mp4": "video/mp4",
 	"wmv": "video/x-ms-wmv",
 	"xml": "text/xml"
 };
@@ -43,23 +44,58 @@ var server = http.createServer(function (req, res) {
 			return;
 		}
 
-		fs.readFile(realPath, "binary", function (err, file) {
-			if (err) {
-				res.writeHead(500, {"Content-Type": "text/plain"});
-				res.end(err);
-				return;
-			}
+		var type = types[extname] || "text/plain";
+		if (!type.match(/video\//))
+		{
+			fs.readFile(realPath, "binary", function (err, file) {
+				if (err) {
+					res.writeHead(500, {"Content-Type": "text/plain"});
+					res.end(err);
+					return;
+				}
 
-			var type = types[extname] || "text/plain";
+				var startPos = 0, endPos = file.length - 1;
+				if (req && req.headers && req.headers.range)
+				{
+					var ranges = req.headers.range.substr(6, req.headers.range.length).split("-");
+					if (ranges)
+					{
+						if (ranges.length > 0 && parseInt(ranges[0])) startPos = parseInt(ranges[0]);
+						if (ranges.length > 1 && parseInt(ranges[1])) endPos = parseInt(ranges[1]);
+					}
+				}
+
+				var options = {
+					"Content-Type": type,
+					"Accept-Ranges": "bytes",
+					"Content-Range": "bytes " + startPos + "-" + endPos + "/" + file.length,
+					"Content-Length": endPos - startPos + 1
+				};
+
+				var data = file.length != (endPos - startPos + 1) ? file.substr(startPos, (endPos - startPos + 1)) : file;
+				res.writeHead(200, options);
+				res.write(data, "binary");
+				res.end();
+			});
+		}
+		else
+		{
+			var readStream = fs.ReadStream(realPath);
 			var options = {
 				"Content-Type": type,
 				"Accept-Ranges": "bytes",
-				"Content-Length": file.length
+				"Server": "Microsoft-IIS/7.5",
+				"X-Powered-By": "ASP.NET"
 			};
-			res.writeHead(200, options);
-			res.write(file, "binary");
-			res.end();
-		});
+  
+	        res.writeHead(200, options);
+	  
+	        readStream.on("close", function() {
+	        	console.log("readStream: finished......");  
+	            res.end();  
+	        });  
+	        readStream.pipe(res); 
+		}
 	});
 });
 

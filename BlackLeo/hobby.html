@@ -47,6 +47,7 @@
         $(document).ready(function(){
             $("#"+"box").append(createBox());
             playMusic(1);
+            document.getElementById("myMusic").pause();
             
             //按钮"下一首"单击事件
             $("#nextMusic").click(function(){
@@ -60,16 +61,9 @@
 
             ////按钮"播放/暂停"单击事件
             $("#playMusic").click(function(){
-                if ($(this).val() == "播放")
-                {
-                    $(this).val("暂停");
-                    document.getElementById("myMusic").play();
-                } 
-                else if ($(this).val() == "暂停")
-                {
-                    $(this).val("播放");
-                    document.getElementById("myMusic").pause();
-                }
+                var myMusic = document.getElementById("myMusic");
+                if (myMusic.paused) document.getElementById("myMusic").play();
+                else document.getElementById("myMusic").pause();
             });
             
             //快进
@@ -105,11 +99,9 @@
         
         //音乐播放
         function playMusic(s,n){
-            $("#playMusic").val("暂停");
             if(s==0){//点击名字播放音乐
             
             }else if(s==1){//下一首
-                $("#playMusic").val("暂停");
                 if(playState==0){//单曲循环
                     if(n==0){
                     
@@ -183,6 +175,14 @@
 
             return zero(h) + ":" + zero(i) + ":" + zero(s);
         };
+
+        function pauseVideo() {
+            document.getElementById("myVideo").pause();
+        }
+
+        function pauseMusic() {
+            document.getElementById("myMusic").pause();
+        }
     </script>
 </head>
 <body>
@@ -212,7 +212,7 @@
                             
                 <input id="lastMusic" type="button" value="上一首" />
                 <input id="rewind" type="button" value="<<" />
-                <input id="playMusic" type="button" value="暂停" />
+                <input id="playMusic" type="button" value="播放/暂停"/>
                 <input id="fast" type="button" value=">>" />
                 <input id="nextMusic" type="button" value="下一首" />
                 <select id="playState">
@@ -220,8 +220,10 @@
                     <option value="1" selected>列表循环</option>
                     <option value="2">随机播放</option>
                 </select>
-                <audio id="myMusic" src="" autoplay="autoplay" onended="playMusic(1,0)" ontimeupdate="timeupdate()" controls></audio>
+                <audio id="myMusic" src="" autoplay="autoplay" onended="playMusic(1,0)" ontimeupdate="timeupdate()" onplay="pauseVideo()" onplaying="pauseVideo()" controls></audio>
                 <ul id="box"></ul>
+
+                <video id="myVideo" src="movie/李贞贤-换男人.mp4" onplay="pauseMusic()" onplaying="pauseMusic()" controls></video>
             </div>
         </div>
     </div>
